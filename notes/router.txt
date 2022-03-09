@@ -1,0 +1,95 @@
+    //router.GET("/", func(c *gin.Context) {
+	//	c.String(http.StatusOK, "Hello World")
+	//})
+
+	//冒号:加上一个参数名组成路由参数。可以使用c.Params的方法读取其值。当然这个值是字串string。诸如/user/hanru，和/user/hello都可以匹配，而/user/和/user/hanru/不会被匹配。
+	//router.GET("/user/:name", func(c *gin.Context) {
+	//	name := c.Param("name")
+	//	c.String(http.StatusOK, name)
+	//})
+
+	//除了:，gin还提供了*号处理参数，*号能匹配的规则就更多。
+	//router.GET("/user/:name/*action", func(c *gin.Context) {
+	//	name := c.Param("name")
+	//	action := c.Param("action")
+	//	message := name + " is " + action
+	//	c.String(http.StatusOK, message)
+	//})
+
+	//URL参数
+	//router.GET("/welcome", func(c *gin.Context) {
+	//	name := c.DefaultQuery("name", "Guest")// 如果URL上写的 是name= （http://localhost:8000/welcome?name=）, 则设置不了默认值
+	//	nickname := c.Query("nickname") //是 c.Request.URL.Query().Get("nickname") 的简写
+	//	fmt.Println(nickname)
+	//	c.String(http.StatusOK, fmt.Sprintf("Hello %s", name))
+	//})
+
+	//form表单
+	//router.POST("/form", func(c *gin.Context) {
+	//	type1 := c.DefaultPostForm("type", "alert")//可设置默认值
+	//	username := c.PostForm("username")
+	//	password := c.PostForm("password")
+	//	hobbys := c.PostFormArray("hobby")
+	//	fmt.Println(hobbys)
+	//	c.String(http.StatusOK, fmt.Sprintf("type is %s, username is %s, password is %s,hobby is %v", type1, username, password,hobbys))
+	//})
+
+	//上传文件
+	//router.POST("/upload", func(c *gin.Context) {
+		//curl -X POST http://127.0.0.1:8000/upload -F "file=@C:\Users\Admin\Desktop\1606729946(1).jpg" -H "Content-Type:multipart/form-data"
+		//file 对应标签的名字：<input type="file" name="file">
+		//上传单个文件
+		//file, _ := c.FormFile("file")
+		//log.Println(file.Filename)
+		//c.SaveUploadedFile(file, file.Filename)
+		//c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+
+		//curl -X POST http://127.0.0.1:8000/upload -F "files=@C:\Users\Admin\Desktop\1606729946(1).jpg" -F "files=@C:\Users\Admin\Desktop\环境部署说明.txt" -H "Content-Type:multipart/form-data"
+		//files 对应标签的名字：<input type="file" name="files" multiple>
+		//上传多个文件
+		//form, err := c.MultipartForm()
+		//if err != nil {
+		//	c.String(http.StatusBadRequest, fmt.Sprintf("get from err : %s", err.Error()))
+		//	return
+		//}
+		//files := form.File["files"]
+		//for _, file := range files {
+		//	fmt.Println(file.Filename)
+		//	if err := c.SaveUploadedFile(file, file.Filename); err != nil {
+		//		c.String(http.StatusBadRequest, fmt.Sprintf("upload file err : %s", err.Error()))
+		//		return
+		//	}
+		//}
+		//c.String(http.StatusOK, fmt.Sprintf("Uploaded successfully %d files ", len(files)))
+	//})
+
+	//URL分组，router group是为了方便一部分相同的URL的管理
+	//v1 := router.Group("/v1")
+	//{
+	//	v1.GET("/login", loginEndpoint)
+	//	v1.GET("/submit", submitEndpoint)
+	//	v1.POST("/read", readEndpoint)
+	//}
+	//v2 := router.Group("/v2")
+	//{
+	//	v2.GET("/login", loginEndpoint)
+	//	v2.GET("/submit", submitEndpoint)
+	//	v2.POST("/read", readEndpoint)
+	//}
+
+
+
+	func loginEndpoint(c *gin.Context) {
+    	name := c.DefaultQuery("name", "Guest") //可设置默认值
+    	c.String(http.StatusOK, fmt.Sprintf("Hello %s \n", name))
+    }
+
+    func submitEndpoint(c *gin.Context) {
+    	name := c.DefaultQuery("name", "Guest") //可设置默认值
+    	c.String(http.StatusOK, fmt.Sprintf("Hello %s \n", name))
+    }
+
+    func readEndpoint(c *gin.Context) {
+    	name := c.DefaultQuery("name", "Guest") //可设置默认值
+    	c.String(http.StatusOK, fmt.Sprintf("Hello %s \n", name))
+    }

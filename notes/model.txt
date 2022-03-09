@@ -1,0 +1,73 @@
+    //1.binding JSON
+	// Example for binding JSON ({"user": "hanru", "password": "hanru123"})
+	//router.POST("/loginJSON", func(c *gin.Context) {
+	//	var json Login
+	//	//其实就是将request中的Body中的数据按照JSON格式解析到json变量中
+	//	if err := c.ShouldBindJSON(&json); err != nil {
+	//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//		return
+	//	}
+	//	if json.User != "hanru" || json.Password != "hanru123" {
+	//		c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
+	//		return
+	//	}
+	//	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+	//})
+
+	// 3. Form 绑定普通表单的例子
+	// Example for binding a HTML form (user=hanru&password=hanru123)
+	//router.POST("/loginForm", func(c *gin.Context) {
+	//	var form Login
+	//	//方法一：对于FORM数据直接使用Bind函数, 默认使用使用form格式解析,if c.Bind(&form) == nil
+	//	// 根据请求头中 content-type 自动推断.
+	//	// 经测试得出: form表单内的Key值必须和结构体的属性一直，比如结构体的属性是 :{User, Password},
+	//	// 那么from表单提交过来的Key的值也必须是User和Password, 如果是html里标签内name也必须是User和Password,例如：<input type="text" name="User">
+	//	// 否则会报错："error":"Key: 'Login.User' Error:Field validation for 'User' failed on the 'required'
+	//	// tag\nKey: 'Login.Password' Error:Field validation for 'Password' failed on the 'required' tag"}
+	//	if err := c.Bind(&form); err != nil {
+	//		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//		return
+	//	}
+	//	if form.User != "hanru" || form.Password != "hanru123" {
+	//		c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
+	//		return
+	//	}
+	//	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+	//
+	//})
+	//router.POST("/login", func(c *gin.Context) {
+	//	var form Login
+	//	//方法二: 使用BindWith函数,如果你明确知道数据的类型
+	//	// 你可以显式声明来绑定多媒体表单：
+	//	// 经测试得出：使用BindWith()会报错：BindWith(\"interface{}, binding.Binding\") error is going to
+	//	//	be deprecated, please check issue #662 and either use MustBindWith() if you
+	//	//	want HTTP 400 to be automatically returned if any error occur, or use
+	//	//	ShouldBindWith() if you need to manage the error.
+	//	//	使用 MustBindWith() 或 ShouldBindWith() 方法不报错
+	//	//	该错误可能是因为版本问题导致，当前go版本：1.17.5
+	//	//c.BindWith(&form, binding.Form)
+	//	//或者使用自动推断：
+	//	if c.MustBindWith(&form, binding.Form) == nil {
+	//		if form.User == "user" && form.Password == "password" {
+	//			c.JSON(200, gin.H{"status": "you are logged in ....."})
+	//		} else {
+	//			c.JSON(401, gin.H{"status": "unauthorized"})
+	//		}
+	//	}
+	//})
+
+	//5.URI
+	//router.GET("/:user/:password", func(c *gin.Context) {
+	//	var login Login
+	//	if err := c.ShouldBindUri(&login); err != nil {
+	//		c.JSON(400, gin.H{"msg": err})
+	//		return
+	//	}
+	//	c.JSON(200, gin.H{"username": login.User, "password": login.Password})
+	//})
+
+
+type Login struct {
+	User string `from:"username" json:"user" uri:"user" xml:"user" binding:"required"`
+	Password string `from:"password" json:"password" uri:"password" xml:"password" binding:"required"`
+}

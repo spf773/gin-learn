@@ -1,0 +1,91 @@
+    //一、JSON/XML/YAML渲染
+    //gin.H 是一个 map[string]interface{}的快捷方式
+    	router.GET("/someJSON", func(c *gin.Context) {
+    		c.JSON(http.StatusOK, gin.H{"message": "hey", "status" : http.StatusOK})
+    	})
+	router.GET("/moreJSON", func(c *gin.Context) {
+		//也可以使用结构
+		var msg struct {
+			Name string `json:"user"`
+			Message string
+			Number int
+		}
+		msg.Name = "hanru"
+		msg.Message = "hey"
+		msg.Number = 123
+		//注意，msg.Name 变成了 "user" 字段
+		//以下方式都会输出 ： {"user": "hanru", "Message":"hey", "Number": 123}
+		c.JSON(http.StatusOK, msg)
+	})
+
+	router.GET("/someXML", func(c *gin.Context) {
+		c.XML(http.StatusOK, gin.H{"user": "hanru", "message": "hey", "status": http.StatusOK})
+	})
+
+	router.GET("/someYAML", func(c *gin.Context) {
+		c.YAML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
+	})
+
+	router.GET("/someProtoBuf", func(c *gin.Context) {
+		reps := []int64{int64(1), int64(2)}
+		label := "test"
+		//protobuf的具体定义写在testdata/protoexample文件中。
+		data := &protoexample.Test{
+			Label: &label,
+			Reps: reps,
+		}
+		//注意，在响应中，data变成了二进制数据
+		//将输出原型。测试protobuf序列化的数据
+		c.ProtoBuf(http.StatusOK, data)
+	})
+
+	//二、HTML模板渲染
+    //加载模板
+    //router.LoadHTMLGlob("templates/*")
+    ////router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
+    ////定义路由
+    //router.GET("/index", func(c *gin.Context) {
+    //	//根据完整文件名渲染模板，并传递参数
+    //	c.HTML(200, "index.tmpl", gin.H{"title" : "Main website"})
+    //})
+    //不同文件夹下模板名字可以相同，此时需要 LoadHTMLGlob() 加载两层模板路径。
+    //router.LoadHTMLGlob("templates/**/*")
+    //router.GET("/posts/index", func(c *gin.Context) {
+    //	//将两个模板返回到一个页面中
+    //	c.HTML(http.StatusOK, "index.tmpl", gin.H{"title" : "Posts"})
+    //	c.HTML(http.StatusOK, "index.tmpl", gin.H{"title" : "Users"})
+    //})
+
+    //三、文件响应
+    //可以向客户端展示本地的一些文件信息，例如显示某路径下地文件
+    //下面测试静态文件服务
+    //显示当前文件夹下的所有文件/或者指定文件
+    //router.StaticFS("/showDir", http.Dir("."))
+    //访问操作系统/bin的下的内容：
+    //router.StaticFS("/files", http.Dir("/bin"))
+    //Static提供给定文件系统根目录中的文件
+    //router.Static("/files", "/bin")
+    //router.StaticFile("/image", "./notes/model.txt")
+
+    //四、重定向
+    //router.GET("/redirect", func(c *gin.Context) {
+    //	c.Redirect(http.StatusMovedPermanently, "http://www.baidu.com/")
+    //})
+
+    //五、同步异步
+    //1. 异步
+    //router.GET("/long_async", func(c *gin.Context) {
+    //	// goroutine 中只能使用只读的上下文 c.Copy(), goroutine是Go并行设计的核心。goroutine说到底其实就是协程，它比线程更小
+    //	cCp := c.Copy()
+    //	go func() {
+    //		time.Sleep(5 * time.Second)
+    //		//注意使用只读上下文
+    //		log.Println("Done! in path " + cCp.Request.URL.Path)
+    //	}()
+    //})
+    ////2. 同步
+    //router.GET("/long_sync", func(c *gin.Context) {
+    //	time.Sleep(5 * time.Second)
+    //	//注意可以使用原始上下文
+    //	log.Println("Done! in path " + c.Request.URL.Path)
+    //})
