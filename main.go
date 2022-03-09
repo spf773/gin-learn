@@ -9,7 +9,7 @@ func main() {
 	// 创建带有默认中间件的路由:
 	// 日志与恢复中间件
 	router := gin.Default()
-	//
+
 	//创建不带中间件的路由:
 	//r := gin.New()
 
